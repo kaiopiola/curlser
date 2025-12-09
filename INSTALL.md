@@ -2,7 +2,37 @@
 
 This guide will help you install curlser so you can use it from anywhere in your terminal by just typing `curlser`.
 
-## Prerequisites
+## macOS (Homebrew) - Recommended
+
+The easiest way to install on macOS:
+
+```bash
+# Add the tap and install
+brew tap kaiopiola/curlser https://github.com/kaiopiola/curlser
+brew install curlser
+```
+
+Or install directly without adding a tap:
+
+```bash
+brew install --formula https://raw.githubusercontent.com/kaiopiola/curlser/v1.0.0/Formula/curlser.rb
+```
+
+To update:
+```bash
+brew upgrade curlser
+```
+
+To uninstall:
+```bash
+brew uninstall curlser
+```
+
+---
+
+## Manual Build
+
+### Prerequisites
 
 Make sure you have libcurl installed:
 

@@ -13,6 +13,25 @@ A CLI tool written in C that performs HTTP requests, but with automatic output f
 - [x] Custom headers support
 - [x] Request body support
 
+## Installation
+
+### macOS (Homebrew)
+
+```bash
+brew tap kaiopiola/curlser https://github.com/kaiopiola/curlser
+brew install curlser
+```
+
+Or install directly without tap:
+
+```bash
+brew install --formula https://raw.githubusercontent.com/kaiopiola/curlser/v1.0.0/Formula/curlser.rb
+```
+
+### Manual Installation
+
+See [INSTALL.md](INSTALL.md) for detailed instructions.
+
 ## Dependencies
 
 - libcurl (for HTTP requests)
