@@ -6,7 +6,7 @@ class Curlser < Formula
   desc "Colorful HTTP client for terminal with automatic formatting"
   homepage "https://github.com/kaiopiola/curlser"
   url "https://github.com/kaiopiola/curlser/archive/refs/tags/v1.0.0.tar.gz"
-  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
+  sha256 "3b7b79989301988a4ae9ed421af20218511f1963faed2035f826590cb5f3bc96"
   license "MIT"
 
   depends_on "curl"
