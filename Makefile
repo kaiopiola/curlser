@@ -1,7 +1,7 @@
-# Makefile para curlser
-# Suporta Linux, macOS e Windows (MinGW)
+# Makefile for curlser
+# Supports Linux, macOS and Windows (MinGW)
 
-# Detecta sistema operacional
+# Detect operating system
 UNAME_S := $(shell uname -s 2>/dev/null || echo Windows)
 
 # Compilador e flags
