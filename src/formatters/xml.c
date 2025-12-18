@@ -18,7 +18,7 @@ void format_xml(const char *data) {
     const char *p = data;
 
     while (*p) {
-        // Detecta comentarios XML
+        // Detect XML comments
         if (!in_string && strncmp(p, "<!--", 4) == 0) {
             printf("%s<!--", color(DIM));
             p += 4;
@@ -38,7 +38,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Detecta CDATA
+        // Detect CDATA
         if (!in_string && strncmp(p, "<![CDATA[", 9) == 0) {
             printf("%s<![CDATA[", color(YELLOW));
             p += 9;
@@ -58,7 +58,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Dentro de string (atributo)
+        // Inside string (attribute)
         if (in_tag && (*p == '"' || *p == '\'')) {
             char quote = *p;
             if (!in_string) {
@@ -78,7 +78,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Inicio de tag
+        // Tag start
         if (*p == '<') {
             in_tag = 1;
             is_closing_tag = (*(p + 1) == '/');
@@ -88,7 +88,7 @@ void format_xml(const char *data) {
                 indent--;
             }
 
-            // Nova linha e indentacao para tags (exceto primeira)
+            // Newline and indentation for tags (except first)
             if (p != data && !tag_has_content) {
                 putchar('\n');
                 for (int i = 0; i < indent * 2; i++) putchar(' ');
@@ -99,7 +99,7 @@ void format_xml(const char *data) {
             if (is_closing_tag) {
                 printf("%s/", color(BLUE));
                 p += 2;
-                // Imprime nome da tag
+                // Print tag name
                 printf("%s", color(CYAN));
                 while (*p && *p != '>' && !isspace(*p)) {
                     putchar(*p);
@@ -110,12 +110,12 @@ void format_xml(const char *data) {
             }
 
             p++;
-            // Detecta declaracao XML ou processing instruction
+            // Detect XML declaration or processing instruction
             if (*p == '?') {
                 printf("%s?", color(MAGENTA));
                 p++;
             }
-            // Imprime nome da tag
+            // Print tag name
             printf("%s", color(CYAN));
             while (*p && *p != '>' && *p != '/' && !isspace(*p)) {
                 putchar(*p);
@@ -126,9 +126,9 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Fim de tag
+        // Tag end
         if (*p == '>') {
-            // Verifica se e self-closing
+            // Check if self-closing
             if (p > data && *(p - 1) == '/') {
                 is_self_closing = 1;
             } else if (p > data && *(p - 1) == '?') {
@@ -147,7 +147,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Self-closing slash
+        // Self-closing tag slash
         if (in_tag && *p == '/') {
             printf("%s/", color(BLUE));
             is_self_closing = 1;
@@ -155,7 +155,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Nome de atributo
+        // Attribute name
         if (in_tag && isalpha(*p)) {
             printf(" %s", color(YELLOW));
             while (*p && *p != '=' && *p != '>' && !isspace(*p)) {
@@ -166,18 +166,18 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Igual em atributo
+        // Equals sign in attribute
         if (in_tag && *p == '=') {
             printf("%s=%s", color(BOLD_WHITE), color(RESET));
             p++;
             continue;
         }
 
-        // Conteudo de texto
+        // Text content
         if (!in_tag) {
-            // Pula whitespace entre tags
+            // Skip whitespace between tags
             if (isspace(*p)) {
-                // Verifica se ha conteudo real apos whitespace
+                // Check if there's real content after whitespace
                 const char *look = p;
                 while (*look && isspace(*look)) look++;
                 if (*look == '<') {
@@ -186,7 +186,7 @@ void format_xml(const char *data) {
                 }
             }
 
-            // Conteudo de texto real
+            // Actual text content
             printf("%s", color(WHITE));
             tag_has_content = 1;
             while (*p && *p != '<') {
@@ -197,7 +197,7 @@ void format_xml(const char *data) {
             continue;
         }
 
-        // Espacos dentro de tag
+        // Spaces inside tag
         if (in_tag && isspace(*p)) {
             p++;
             continue;

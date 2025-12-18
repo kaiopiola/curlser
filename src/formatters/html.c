@@ -4,13 +4,13 @@
 #include <string.h>
 #include <ctype.h>
 
-// Tags que nao precisam de fechamento
+// Void tags (don't need closing)
 static const char *void_tags[] = {
     "area", "base", "br", "col", "embed", "hr", "img", "input",
     "link", "meta", "param", "source", "track", "wbr", NULL
 };
 
-// Tags que preservam whitespace
+// Tags that preserve whitespace
 static const char *preformatted_tags[] = {
     "pre", "code", "textarea", "script", "style", NULL
 };
@@ -50,7 +50,7 @@ void format_html(const char *data) {
     const char *p = data;
 
     while (*p) {
-        // Detecta comentarios HTML
+        // Detect HTML comments
         if (!in_string && strncmp(p, "<!--", 4) == 0) {
             if (needs_newline) {
                 putchar('\n');
@@ -76,7 +76,7 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Conteudo de script/style (sem formatacao)
+        // Script/style content (no formatting)
         if (in_script || in_style) {
             const char *end_tag = in_script ? "</script" : "</style";
             if (strncasecmp(p, end_tag, strlen(end_tag)) == 0) {
@@ -91,7 +91,7 @@ void format_html(const char *data) {
             }
         }
 
-        // Dentro de string (atributo)
+        // Inside string (attribute)
         if (in_tag && (*p == '"' || *p == '\'')) {
             char quote = *p;
             if (!in_string) {
@@ -111,7 +111,7 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Inicio de tag
+        // Tag start
         if (*p == '<') {
             in_tag = 1;
             is_closing_tag = (*(p + 1) == '/');
@@ -145,7 +145,7 @@ void format_html(const char *data) {
                 p++;
             }
 
-            // Captura nome da tag
+            // Capture tag name
             printf("%s", color(CYAN));
             while (*p && *p != '>' && *p != '/' && !isspace(*p)) {
                 if (tag_name_idx < 63) {
@@ -158,7 +158,7 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Fim de tag
+        // Tag end
         if (*p == '>') {
             int is_self_closing = (p > data && *(p - 1) == '/');
             size_t tag_len = strlen(current_tag);
@@ -170,7 +170,7 @@ void format_html(const char *data) {
                 indent++;
             }
 
-            // Detecta script/style
+            // Detect script/style
             if (!is_closing_tag && tag_len > 0) {
                 if (strcmp(current_tag, "script") == 0) in_script = 1;
                 if (strcmp(current_tag, "style") == 0) in_style = 1;
@@ -182,14 +182,14 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Self-closing slash
+        // Self-closing tag slash
         if (in_tag && *p == '/') {
             printf("%s/", color(BLUE));
             p++;
             continue;
         }
 
-        // Nome de atributo
+        // Attribute name
         if (in_tag && (isalpha(*p) || *p == '-' || *p == '_')) {
             printf(" %s", color(YELLOW));
             while (*p && *p != '=' && *p != '>' && *p != '/' && !isspace(*p)) {
@@ -200,16 +200,16 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Igual em atributo
+        // Equals sign in attribute
         if (in_tag && *p == '=') {
             printf("%s=%s", color(BOLD_WHITE), color(RESET));
             p++;
             continue;
         }
 
-        // Conteudo de texto
+        // Text content
         if (!in_tag) {
-            // Pula whitespace entre tags
+            // Skip whitespace between tags
             if (isspace(*p)) {
                 const char *look = p;
                 while (*look && isspace(*look)) look++;
@@ -217,12 +217,12 @@ void format_html(const char *data) {
                     p = look;
                     continue;
                 }
-                // Whitespace significativo
+                // Significant whitespace
                 p++;
                 continue;
             }
 
-            // Conteudo de texto real
+            // Actual text content
             if (needs_newline) {
                 putchar('\n');
                 for (int i = 0; i < indent * 2; i++) putchar(' ');
@@ -234,7 +234,7 @@ void format_html(const char *data) {
                 putchar(*p);
                 p++;
             }
-            // Inclui espacos no texto
+            // Include spaces in text
             while (*p && isspace(*p) && *(p + 1) && *(p + 1) != '<') {
                 putchar(' ');
                 while (*p && isspace(*p)) p++;
@@ -243,7 +243,7 @@ void format_html(const char *data) {
             continue;
         }
 
-        // Espacos dentro de tag
+        // Spaces inside tag
         if (in_tag && isspace(*p)) {
             p++;
             continue;
